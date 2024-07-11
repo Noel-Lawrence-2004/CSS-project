@@ -1,6 +1,6 @@
 # Digital Certificate Simulation
 
-The Digital Certificate Simulation project is a comprehensive system designed to emulate the process of digitally signing and verifying PDF certificates for secure online transactions or document authentication.
+This project is a comprehensive system designed to emulate the process of digitally signing and verifying PDF certificates for secure online transactions or document authentication. It uses a Streamlit web application to perform operations such as generating digital signatures and verifying them.
 
 ## Table of Contents
 
@@ -8,6 +8,8 @@ The Digital Certificate Simulation project is a comprehensive system designed to
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
+- [Code Explanation](#code-explanation)
+- [Contributing](#contributing)
 
 
 ## Introduction
@@ -15,8 +17,6 @@ The Digital Certificate Simulation project is a comprehensive system designed to
 In this simulation, a digital certificate in PDF format is taken as input. The certificate's contents are hashed to generate a unique digital fingerprint, ensuring the integrity of the document. This hash is then encrypted using a private key, creating a digital signature that uniquely identifies the sender and guarantees the authenticity of the document.
 
 Upon receiving the signed PDF certificate, the client-side application decodes the signature using the corresponding public key. It then hashes the original contents of the PDF to generate another fingerprint. Finally, it compares this new hash with the decrypted signature to verify the integrity and authenticity of the document.
-
-This simulation project provides a hands-on understanding of digital certificate processes, including hashing, encryption, and verification, crucial for ensuring secure communication and document exchange in digital environments.
 
 ## Features
 
@@ -30,40 +30,54 @@ This simulation project provides a hands-on understanding of digital certificate
 ### Prerequisites
 
 - Python 3.7 or higher
-- OpenSSL (for key generation)
+- Streamlit
+- PyPDF
+- rsa
+- hashlib
 
 ### Setup
 
 1. Clone the repository:
     ```sh
     git clone https://github.com/yourusername/digital-certificate-simulation.git
+    cd digital-certificate-simulation
     ```
 
 2. Install the required packages:
+    ```sh
+    pip install streamlit pypdf rsa
+    ```
 
-3. Generate a private key and a corresponding public key using OpenSSL:
+3. Generate RSA keys and place them in the specified directory (`path\to\your\directory\keys`):
+    ```sh
+    openssl genpkey -algorithm RSA -out p2.pem
+    openssl rsa -pubout -in p2.pem -out p1.pem
+    ```
 
 ## Usage
 
-1. **Signing a PDF Certificate**:
-    - Run the signing script:
-        ```sh
-        python stream.py --input_path path/to/certificate.pdf --output_path path/to/signed_certificate.pdf --private_key_path path/to/private_key.pem
-        ```
+1. Run the Streamlit application:
+    ```sh
+    streamlit run app.py
+    ```
 
-2. **Verifying a Signed PDF Certificate**:
-    - Run the verification script:
-        ```sh
-        python verify_certificate.py --input_path path/to/signed_certificate.pdf --public_key_path path/to/public_key.pem
-        ```
+2. **Generate Digital Signature**:
+    - Upload a PDF file to the application.
+    - The application will process the PDF, generate a digital signature, and save the signed document as a text file.
 
-## Screenshots
+3. **Verify Digital Signature**:
+    - Upload the signed text file (DSC) to the application.
+    - The application will verify the digital signature and display the results.
 
-### Digital Certificate Signing
-![Digital Certificate Signing](screenshots/signing.png)
+## Code Explanation
 
-### Digital Certificate Verification
-![Digital Certificate Verification](screenshots/verification.png)
+- **generate_digital_signature**: Generates a hash of the input text and encrypts it using a private key to create a digital signature.
+- **append_digital_signature**: Appends the digital signature to the original text.
+- **keys**: Loads the RSA private and public keys from the specified directory.
+- **CA**: Reads the PDF, extracts text, and generates a digital signature.
+- **client**: Verifies the digital signature by comparing the hash of the original text with the decrypted signature.
+- **main**: Streamlit application entry point, handles file uploads and operations.
+
 
 ## Contributing
 
@@ -74,14 +88,4 @@ Contributions are welcome! Please follow these steps to contribute:
 3. Commit your changes: `git commit -m 'Add my feature'`.
 4. Push to the branch: `git push origin feature/my-feature`.
 5. Open a pull request.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-
-
-
-
-
 
